@@ -2,6 +2,7 @@ import { Engine } from "./Engine";
 import { DebugController } from "./DebugController";
 import { Config } from "./Config";
 import * as THREE from "three";
+import * as MATH from "./particles/Math";
 
 export class Experience extends Engine {
   private static instance: Experience | null = null;
@@ -23,5 +24,23 @@ export class Experience extends Engine {
       new THREE.MeshBasicMaterial({ color: 0xfffff0 })
     );
     this.scene.add(cube);
+
+    const interpolant = new MATH.ColorInterpolant([
+      { time: 0, value: new THREE.Color(0x0000ff) },
+      { time: 1, value: new THREE.Color(0x00ff00) },
+    ]);
+
+    const texture = interpolant.toTexture();
+    console.log(texture);
+
+    const alphaInterpolant = new MATH.FloatInterpolant([
+      { time: 0, value: 0 },
+      { time: 1, value: 1 },
+      { time: 0.5, value: 0.5 },
+      { time: 2, value: 0.75 },
+    ]);
+
+    const texture2 = interpolant.toTexture(alphaInterpolant);
+    console.log(texture2);
   }
 }
