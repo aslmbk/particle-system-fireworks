@@ -1,8 +1,8 @@
-import { Engine } from "./Engine";
+import { Engine } from "./engine";
 import { DebugController } from "./DebugController";
 import { Config } from "./Config";
 import * as THREE from "three";
-import * as MATH from "./particles/Math";
+import { MATH } from "./lib";
 
 export class Experience extends Engine {
   private static instance: Experience | null = null;
