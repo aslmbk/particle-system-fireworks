@@ -15,7 +15,7 @@ export class Experience extends Engine {
     Experience.instance = this;
 
     this.config = new Config();
-    this.debugController = new DebugController(this);
+    this.debugController = new DebugController();
 
     this.stats.activate();
     this.camera.position.set(0, 0, 20);
