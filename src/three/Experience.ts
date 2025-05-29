@@ -1,8 +1,7 @@
 import { Engine } from "./engine";
 import { DebugController } from "./DebugController";
 import { Config } from "./Config";
-import * as THREE from "three";
-import { MATH } from "./lib";
+import { ParticlesManager } from "./ParticlesManager";
 
 export class Experience extends Engine {
   private static instance: Experience | null = null;
@@ -17,30 +16,18 @@ export class Experience extends Engine {
 
     this.config = new Config();
     this.debugController = new DebugController(this);
+
     this.stats.activate();
+    this.camera.position.set(0, 0, 20);
 
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0xfffff0 })
-    );
-    this.scene.add(cube);
+    const particlesManager = new ParticlesManager(this.loader, this.viewport);
+    this.scene.add(particlesManager.scene);
 
-    const interpolant = new MATH.ColorInterpolant([
-      { time: 0, value: new THREE.Color(0x0000ff) },
-      { time: 1, value: new THREE.Color(0x00ff00) },
-    ]);
-
-    const texture = interpolant.toTexture();
-    console.log(texture);
-
-    const alphaInterpolant = new MATH.FloatInterpolant([
-      { time: 0, value: 0 },
-      { time: 1, value: 1 },
-      { time: 0.5, value: 0.5 },
-      { time: 2, value: 0.75 },
-    ]);
-
-    const texture2 = interpolant.toTexture(alphaInterpolant);
-    console.log(texture2);
+    this.time.events.on("tick", (time) => {
+      particlesManager.update(time);
+    });
+    this.viewport.events.on("change", (viewport) => {
+      particlesManager.resize(viewport);
+    });
   }
 }
